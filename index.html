@@ -501,7 +501,46 @@
     .photo-slot { width: min(38vw, 190px); }
     .photo-slot.large { width: min(50vw, 220px); }
   }
+  /* ---------- Letter styles ---------- */
+  .letter-card {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    background: #fff8f3;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 3rem 1.75rem 2.25rem;
+    text-align: center;
+    animation: unfoldIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes unfoldIn {
+    0% { opacity: 0; transform: scale(0.92) rotateX(6deg) translateY(12px); }
+    100% { opacity: 1; transform: scale(1) rotateX(0) translateY(0); }
+  }
+  .wax-stamp {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #a41c40, #5c0819 78%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fbd6a9;
+    font-size: 1.3rem;
+    box-shadow: 0 10px 22px rgba(78, 28, 41, 0.35), 0 0 0 5px #fff8f3;
+  }
+  .letter-heading { font-family: 'Fraunces', serif; font-style: italic; font-weight: 600; font-size: clamp(1.6rem, 6vw, 2.1rem); color: #5c0819; margin: 0.75rem 0 0.6rem; }
+  .letter-salutation { font-family: 'Fraunces', serif; font-size: clamp(1.5rem, 6vw, 1.8rem); color: #a41c40; margin-bottom: 1.5rem; }
+  .letter-body { text-align: left; }
+  .letter-body p { font-family: 'Nunito', sans-serif; font-size: 1.02rem; line-height: 1.85; color: #1a1a1a; margin-bottom: 1.15em; }
+  .letter-signature { margin-top: 2.25rem; text-align: right; font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: #666; line-height: 1.9; }
+  .name-script.small { font-family: 'Fraunces', serif; font-size: 1.6rem; color: #8a1331; }
 </style>
+<link rel="stylesheet" href="flowers.css">
 </head>
 <body>
 
@@ -536,7 +575,7 @@
         favorite ordinary day of all time.
       </p>
       <div class="photo-slot">
-        <img src="photos/gallery-01.jpg" alt="The day we met">
+        <img src="photos/gallery-01.jpeg" alt="The day we met">
       </div>
       <button class="continue-btn" data-next>Continue →</button>
     </div>
@@ -549,7 +588,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">just us,</div>
-      <div class="photo-slot large"><img src="photos/gallery-02.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-02.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -568,7 +607,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">another favorite,</div>
-      <div class="photo-slot large"><img src="photos/gallery-03.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-03.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -587,7 +626,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">this one always makes me smile,</div>
-      <div class="photo-slot large"><img src="photos/gallery-04.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-04.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -603,7 +642,7 @@
   <div class="slide" id="moment-4" data-anim="right">
     <div class="memory">
       <div class="memory-label">and this,</div>
-      <div class="photo-slot large"><img src="photos/gallery-05.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-05.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -615,7 +654,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">one more,</div>
-      <div class="photo-slot large"><img src="photos/gallery-06.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-06.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -634,7 +673,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">still my favorite,</div>
-      <div class="photo-slot large"><img src="photos/gallery-07.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-07.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -643,7 +682,7 @@
   <div class="slide" id="moment-7" data-anim="up">
     <div class="memory">
       <div class="memory-label">and this one too,</div>
-      <div class="photo-slot large"><img src="photos/gallery-08.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-08.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -662,7 +701,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">just because,</div>
-      <div class="photo-slot large"><img src="photos/gallery-09.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-09.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -671,7 +710,7 @@
   <div class="slide" id="moment-9" data-anim="left">
     <div class="memory">
       <div class="memory-label">and this,</div>
-      <div class="photo-slot large"><img src="photos/gallery-10.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-10.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -695,7 +734,7 @@
   <div class="slide" id="moment-10" data-anim="pop">
     <div class="memory">
       <div class="memory-label">and last but not least,</div>
-      <div class="photo-slot large"><img src="photos/gallery-11.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-11.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -704,9 +743,108 @@
   <div class="slide" id="moment-11" data-anim="left">
     <div class="memory">
       <div class="memory-label">and one more,</div>
-      <div class="photo-slot large"><img src="photos/gallery-12.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-12.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ FLOWERS ============ -->
+  <div class="slide" id="flowers" data-anim="up">
+    <div style="transform: scale(0.6); position: relative; width: 100%; height: 60vh;">
+      <div class="flowers" style="transform: scale(0.6); transform-origin: bottom center;">
+        <div class="flower flower--1">
+          <div class="flower__leafs flower__leafs--1">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+            <div class="flower__line__leaf flower__line__leaf--5"></div>
+            <div class="flower__line__leaf flower__line__leaf--6"></div>
+          </div>
+        </div>
+        <div class="flower flower--2">
+          <div class="flower__leafs flower__leafs--2">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+          </div>
+        </div>
+        <div class="flower flower--3">
+          <div class="flower__leafs flower__leafs--3">
+            <div class="flower__leaf flower__leaf--1"></div>
+            <div class="flower__leaf flower__leaf--2"></div>
+            <div class="flower__leaf flower__leaf--3"></div>
+            <div class="flower__leaf flower__leaf--4"></div>
+            <div class="flower__white-circle"></div>
+            <div class="flower__light flower__light--1"></div>
+            <div class="flower__light flower__light--2"></div>
+            <div class="flower__light flower__light--3"></div>
+            <div class="flower__light flower__light--4"></div>
+            <div class="flower__light flower__light--5"></div>
+            <div class="flower__light flower__light--6"></div>
+            <div class="flower__light flower__light--7"></div>
+            <div class="flower__light flower__light--8"></div>
+          </div>
+          <div class="flower__line">
+            <div class="flower__line__leaf flower__line__leaf--1"></div>
+            <div class="flower__line__leaf flower__line__leaf--2"></div>
+            <div class="flower__line__leaf flower__line__leaf--3"></div>
+            <div class="flower__line__leaf flower__line__leaf--4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="memory-label" style="position: relative; z-index: 10;">a little garden for you</div>
+    <button class="continue-btn" data-next style="position: relative; z-index: 10;">Continue ?</button>
+  </div>
+
+  <!-- ============ LETTER ============ -->
+  <div class="slide" id="letter" data-anim="pop" style="overflow-y: auto;">
+    <div class="letter-card">
+      <div class="wax-stamp" aria-hidden="true">&#10084;</div>
+      <h1 class="letter-heading" style="color: black;">My Letter to You</h1>
+      <p class="letter-salutation" style="color: #666;">My Dearest Sabrina,</p>
+      <div class="letter-body" id="letterBody" style="color: #333;">
+        <p>Happy Birthday! Thank you for being the most amazing person in my life. I wanted to make this little surprise for you because you deserve all the love in the world.</p>
+        <p>I hope your day is as beautiful as your smile. I love you!</p>
+      </div>
+      <p class="letter-signature" style="color: #666;">
+        Forever yours,<br />
+        <span class="name-script small">Me</span>
+      </p>
+    </div>
+    <button class="continue-btn" data-next style="color: white; border-color: white;">Continue ?</button>
   </div>
 
   <!-- ============ FINALE ============ -->
@@ -815,7 +953,7 @@
     'stmt-wishes', 'moment-6',
     'moment-7', 'stmt-always',
     'moment-8', 'moment-9',
-    'game', 'moment-10', 'moment-11', 'finale'
+    'game', 'moment-10', 'moment-11', 'flowers', 'letter', 'finale'
   ];
   const slides = slideIds.map((id) => document.getElementById(id));
   const dotsNav = document.getElementById('progressDots');
@@ -1050,7 +1188,7 @@
   const hintEl = document.getElementById('gameHint');
 
   let dodges = 0;
-  const dodgesBeforeCatchable = 4;
+  const dodgesBeforeCatchable = 999;
   let caught = false;
 
   const particleEmojis = ['💨', '✨', '💫'];
@@ -1146,6 +1284,7 @@
     }
   }, { passive: false });
 
+  document.getElementById('yes-btn').addEventListener('click', () => { catchButton(); });
   function catchButton() {
     caught = true;
     btn.classList.remove('ready', 'jumping');
@@ -1178,3 +1317,10 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
