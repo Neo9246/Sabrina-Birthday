@@ -750,8 +750,8 @@
 
   <!-- ============ FLOWERS ============ -->
   <div class="slide" id="flowers" data-anim="up">
-    <div style="transform: scale(0.6); position: relative; width: 100%; height: 60vh;">
-      <div class="flowers" style="transform: scale(0.6); transform-origin: bottom center;">
+    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100%; display: flex; justify-content: center; align-items: flex-end; pointer-events: none; z-index: 0; overflow: hidden;">
+      <div class="flowers" style="transform: scale(0.6); transform-origin: bottom center; margin-bottom: -50px;">
         <div class="flower flower--1">
           <div class="flower__leafs flower__leafs--1">
             <div class="flower__leaf flower__leaf--1"></div>
@@ -1188,7 +1188,7 @@
   const hintEl = document.getElementById('gameHint');
 
   let dodges = 0;
-  const dodgesBeforeCatchable = 999;
+  const dodgesBeforeCatchable = 4;
   let caught = false;
 
   const particleEmojis = ['💨', '✨', '💫'];
@@ -1263,7 +1263,7 @@
       e.clientX - (btnRect.left + btnRect.width / 2),
       e.clientY - (btnRect.top + btnRect.height / 2)
     );
-    if (dist < 95 && dodges < dodgesBeforeCatchable) {
+    if (dist < 45 && dodges < dodgesBeforeCatchable) {
       dodge();
     }
   });
@@ -1317,6 +1317,11 @@
 
 </body>
 </html>
+
+
+
+
+
 
 
 
