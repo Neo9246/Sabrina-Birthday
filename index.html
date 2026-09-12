@@ -21,6 +21,8 @@
     --gold: #f4c77b;
     --cream: #fff8f3;
     --line-max: 62ch;
+    --bounce: cubic-bezier(.34, 1.56, .64, 1);
+    --smooth: cubic-bezier(.22, 1, .36, 1);
   }
 
   * {
@@ -28,7 +30,6 @@
     -webkit-tap-highlight-color: transparent;
   }
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     height: 100%;
   }
@@ -38,13 +39,11 @@
     background: var(--plum);
     color: var(--cream);
     font-family: 'Nunito', sans-serif;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-    overscroll-behavior-y: contain;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
-    min-height: 100%;
-    min-height: -webkit-fill-available;
+    height: 100%;
+    overflow: hidden;
   }
 
   h1, h2, .display {
@@ -54,19 +53,42 @@
     margin: 0;
   }
 
-  section {
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: 100svh;
+  /* ---------- Stage: one full-screen "slide" visible at a time ---------- */
+  #stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: -webkit-fill-available;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6rem 1.5rem;
-    padding-top: calc(6rem + env(safe-area-inset-top));
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
-    position: relative;
+    padding: 5.5rem 1.5rem;
+    padding-top: calc(5.5rem + env(safe-area-inset-top));
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
     text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform, opacity;
+    transition: opacity 0.7s var(--smooth), transform 0.8s var(--smooth);
+  }
+  .slide[data-anim="left"]  { transform: translateX(-5%) scale(0.94); }
+  .slide[data-anim="right"] { transform: translateX(5%) scale(0.94); }
+  .slide[data-anim="up"]    { transform: translateY(6%) scale(0.94); }
+  .slide[data-anim="pop"]   { transform: scale(0.85); }
+  .slide.active {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    pointer-events: auto;
+    z-index: 2;
   }
 
   /* ---------- Floating hearts ambient layer ---------- */
@@ -83,17 +105,110 @@
     font-size: 1.4rem;
     opacity: 0.35;
     color: var(--rose);
+    will-change: transform, opacity;
     animation: float-up linear infinite;
   }
   @keyframes float-up {
-    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
     10%  { opacity: 0.4; }
     90%  { opacity: 0.3; }
-    100% { transform: translateY(-110vh) translateX(var(--drift, 20px)) rotate(20deg); opacity: 0; }
+    100% { transform: translate3d(var(--drift, 20px), -110vh, 0) rotate(20deg); opacity: 0; }
+  }
+
+  /* ---------- Progress dots ---------- */
+  .progress-dots {
+    position: fixed;
+    left: 50%;
+    bottom: max(1.4rem, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.55rem;
+    max-width: min(88vw, 320px);
+    z-index: 10;
+  }
+  .progress-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(247, 221, 224, 0.28);
+    border: none;
+    padding: 0;
+    cursor: default;
+    transition: background 0.3s ease, transform 0.3s var(--bounce);
+  }
+  .progress-dot.visited { cursor: pointer; }
+  .progress-dot.active {
+    background: var(--gold);
+    transform: scale(1.6);
+  }
+
+  /* ---------- Music toggle ---------- */
+  .music-toggle {
+    position: fixed;
+    top: max(1.1rem, env(safe-area-inset-top));
+    right: max(1.1rem, env(safe-area-inset-right));
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(247, 221, 224, 0.35);
+    background: rgba(43, 27, 46, 0.55);
+    backdrop-filter: blur(6px);
+    color: var(--cream);
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.25s var(--bounce), border-color 0.25s ease;
+  }
+  .music-toggle:active { transform: scale(0.9); }
+  .music-toggle.playing { border-color: var(--gold); }
+
+  .spotify-embed {
+    position: fixed;
+    left: 50%;
+    bottom: max(3.6rem, calc(env(safe-area-inset-bottom) + 3.6rem));
+    transform: translateX(-50%);
+    width: min(92vw, 360px);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--smooth);
+  }
+  .spotify-embed.show { opacity: 1; pointer-events: auto; }
+  .spotify-embed iframe { display: block; width: 100%; height: 80px; border: 0; }
+
+  /* ---------- Continue button ---------- */
+  .continue-btn {
+    margin-top: 2.5rem;
+    padding: 0.85rem 1.8rem;
+    border-radius: 999px;
+    border: 1.5px solid rgba(247, 221, 224, 0.35);
+    background: transparent;
+    color: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.25s var(--bounce), background 0.25s ease, border-color 0.25s ease;
+    touch-action: manipulation;
+  }
+  .continue-btn:hover {
+    background: rgba(247, 221, 224, 0.08);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+  .continue-btn:active {
+    transform: scale(0.95);
   }
 
   /* ---------- Hero ---------- */
-  #hero { position: relative; z-index: 1; }
   .eyebrow-soft {
     font-family: 'Fraunces', serif;
     font-style: italic;
@@ -112,6 +227,7 @@
     color: transparent;
     opacity: 0;
     animation: reveal 1.1s ease forwards 0.5s;
+    display: inline-block;
   }
   .hero-sub {
     margin-top: 1.5rem;
@@ -121,26 +237,18 @@
     opacity: 0;
     animation: reveal 1s ease forwards 1.1s;
   }
-  .scroll-cue {
-    margin-top: 3.5rem;
-    font-size: 0.85rem;
-    color: var(--rose);
+  #hero .continue-btn {
     opacity: 0;
-    animation: reveal 1s ease forwards 1.6s, bob 2.2s ease-in-out infinite 2.6s;
+    animation: reveal 1s ease forwards 1.6s;
   }
   @keyframes reveal {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(8px); }
-  }
 
-  /* ---------- Memory sections ---------- */
+  /* ---------- Memory / moment slides ---------- */
   .memory {
     max-width: 900px;
-    z-index: 1;
   }
   .memory-label {
     font-family: 'Fraunces', serif;
@@ -163,8 +271,8 @@
   }
 
   .photo-slot {
-    margin: 2.5rem auto 0;
-    width: min(78vw, 380px);
+    margin: 2rem auto 0;
+    width: min(60vw, 300px);
     aspect-ratio: 4 / 5;
     border-radius: 4px;
     border: 1.5px dashed rgba(247, 221, 224, 0.4);
@@ -176,75 +284,110 @@
     transform: rotate(var(--tilt, -2deg));
     box-shadow: 0 20px 40px rgba(0,0,0,0.35);
   }
+  .photo-slot.large {
+    width: min(72vw, 360px);
+  }
   .photo-slot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: none;
-  }
-  .photo-slot img[src]:not([src=""]) { display: block; }
-  .photo-slot .placeholder-text {
-    font-size: 0.8rem;
-    color: rgba(247, 221, 224, 0.55);
-    padding: 1rem;
-    line-height: 1.5;
+    display: block;
   }
 
-  .photo-row {
-    display: flex;
-    gap: 1.4rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 2.5rem;
-  }
-  .photo-row .photo-slot {
-    width: min(40vw, 220px);
-    aspect-ratio: 1 / 1;
-    margin: 0;
-  }
-  .photo-row .photo-slot:nth-child(1) { --tilt: -4deg; }
-  .photo-row .photo-slot:nth-child(2) { --tilt: 3deg; margin-top: 1.4rem; }
-  .photo-row .photo-slot:nth-child(3) { --tilt: -2deg; }
-
-  /* ---------- Statement section ---------- */
-  #forever {
+  /* ---------- Statement slides (short single-line moments) ---------- */
+  .statement {
     background: radial-gradient(circle at 50% 30%, rgba(232,160,169,0.12), transparent 60%);
   }
-  #forever .display {
+  .statement .display {
     font-size: clamp(2.1rem, 7vw, 4rem);
-    max-width: 14ch;
+    max-width: 16ch;
     line-height: 1.15;
     font-style: italic;
   }
 
-  /* ---------- Runaway button game ---------- */
-  #game {
-    background: var(--plum-deep);
-    z-index: 1;
-    overflow: hidden;
+  /* ---------- Little themed doodles, spread across the slides ---------- */
+  .doodle {
+    position: absolute;
+    top: calc(1.6rem + env(safe-area-inset-top));
+    left: 1.4rem;
+    width: 52px;
+    height: 52px;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 3;
   }
-  #game h2 {
+  .doodle svg { width: 100%; height: 100%; display: block; }
+
+  .doodle-bag { animation: doodle-swing 2.6s ease-in-out infinite; transform-origin: 50% 0%; }
+  @keyframes doodle-swing {
+    0%, 100% { transform: rotate(-7deg); }
+    50% { transform: rotate(7deg); }
+  }
+
+  .doodle-martini { animation: doodle-clink 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes doodle-clink {
+    0%, 100% { transform: rotate(-5deg) translateY(0); }
+    50% { transform: rotate(5deg) translateY(-3px); }
+  }
+
+  .doodle-tiramisu { animation: doodle-wobble 2.2s ease-in-out infinite; }
+  @keyframes doodle-wobble {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.08) rotate(-3deg); }
+  }
+
+  .doodle-stethoscope { animation: doodle-pulse 1.6s ease-in-out infinite; }
+  @keyframes doodle-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+
+  .doodle-dice { animation: doodle-roll 2.8s ease-in-out infinite; }
+  @keyframes doodle-roll {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    75% { transform: rotate(12deg); }
+  }
+
+  .doodle-shoe { animation: doodle-bounce 1.8s ease-in-out infinite; }
+  @keyframes doodle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* ---------- Runaway button game ---------- */
+  #game { background: var(--plum-deep); }
+  .game-inner { max-width: 640px; }
+  .game-inner h2 {
     font-size: clamp(1.8rem, 5.5vw, 2.6rem);
     max-width: 18ch;
-    margin-bottom: 0.75rem;
+    margin: 0 auto 0.75rem;
   }
-  #game .memory-label { margin-bottom: 1rem; }
+  .game-inner .memory-label { margin-bottom: 1rem; }
   .game-hint {
     color: var(--blush);
     opacity: 0.75;
     font-size: 0.95rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
+    min-height: 1.3em;
+    transition: opacity 0.2s ease;
   }
   .game-zone {
     position: relative;
     width: min(90vw, 560px);
-    height: min(50vh, 320px);
+    height: min(42vh, 280px);
     margin: 0 auto;
   }
-  #dodge-btn {
+  .dodge-wrap {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
+    transform: translate3d(50%, 50%, 0);
+    transition: transform 0.5s var(--smooth);
+    will-change: transform;
+  }
+  #dodge-btn {
+    position: relative;
     transform: translate(-50%, -50%);
     padding: 1rem 1.9rem;
     border-radius: 999px;
@@ -255,7 +398,6 @@
     font-weight: 800;
     font-size: 1rem;
     cursor: pointer;
-    transition: top 0.28s ease, left 0.28s ease;
     box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     white-space: nowrap;
     touch-action: manipulation;
@@ -263,21 +405,57 @@
     -webkit-user-select: none;
     user-select: none;
     min-height: 44px;
+    will-change: transform, box-shadow;
+    animation: idle-wiggle 2.6s ease-in-out infinite;
+  }
+  #dodge-btn.jumping { animation: jump-pop 0.5s var(--smooth); }
+  #dodge-btn.ready {
+    animation: idle-wiggle 2.6s ease-in-out infinite, glow-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes idle-wiggle {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) rotate(-3deg); }
+  }
+  @keyframes jump-pop {
+    0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    25%  { transform: translate(-50%, -50%) scale(0.82) rotate(-8deg); }
+    55%  { transform: translate(-50%, -50%) scale(1.12) rotate(6deg); }
+    80%  { transform: translate(-50%, -50%) scale(0.97) rotate(-2deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    50% { box-shadow: 0 10px 35px rgba(244, 199, 123, 0.7); }
+  }
+  .dodge-particle {
+    position: absolute;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 3;
+    will-change: transform, opacity;
+    animation: particle-out 0.7s var(--smooth) forwards;
+  }
+  @keyframes particle-out {
+    0%   { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(-50%, calc(-50% - 40px), 0) scale(0.6); }
   }
   .catch-counter {
-    margin-top: 2rem;
-    font-size: 0.85rem;
-    color: var(--rose);
+    margin-top: 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--gold);
     min-height: 1.2em;
+  }
+  .game-inner.shake { animation: shake-screen 0.4s var(--smooth); }
+  @keyframes shake-screen {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    30% { transform: translate3d(-3px, 0, 0); }
+    60% { transform: translate3d(3px, 0, 0); }
+    85% { transform: translate3d(-1px, 0, 0); }
   }
 
   /* ---------- Finale ---------- */
-  #finale {
-    background: linear-gradient(180deg, var(--plum-deep), var(--plum));
-    display: none;
-    z-index: 1;
-  }
-  #finale.show { display: flex; }
+  #finale { background: linear-gradient(180deg, var(--plum-deep), var(--plum)); }
   #finale .display {
     font-size: clamp(2.4rem, 8vw, 4.2rem);
     background: linear-gradient(100deg, var(--gold), var(--rose) 60%, var(--blush));
@@ -305,26 +483,26 @@
     top: -5%;
     width: 8px;
     height: 14px;
-    z-index: 5;
+    z-index: 20;
     pointer-events: none;
+    will-change: transform, opacity;
     animation: confetti-fall linear forwards;
   }
   @keyframes confetti-fall {
-    to { transform: translateY(110vh) rotate(540deg); opacity: 0.9; }
-  }
-
-  footer {
-    text-align: center;
-    padding: 2.5rem 1.5rem 3rem;
-    font-size: 0.75rem;
-    color: rgba(247,221,224,0.4);
-    z-index: 1;
-    position: relative;
+    to { transform: translate3d(0, 110vh, 0) rotate(540deg); opacity: 0.9; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .heart, .scroll-cue, .hero-name, .eyebrow-soft, .hero-sub { animation: none !important; opacity: 1 !important; }
-    #dodge-btn { transition: none; }
+    .heart, .hero-name, .eyebrow-soft, .hero-sub, #hero .continue-btn,
+    #dodge-btn, #dodge-btn.jumping, #dodge-btn.ready, .slide, .doodle { animation: none !important; opacity: 1 !important; }
+    .slide { transition: opacity 0.3s ease !important; transform: none !important; }
+    .slide.active { transform: none !important; }
+  }
+
+  @media (max-height: 560px) {
+    .slide { padding-top: 3rem; padding-bottom: 3rem; }
+    .photo-slot { width: min(38vw, 190px); }
+    .photo-slot.large { width: min(50vw, 220px); }
   }
 </style>
 </head>
@@ -332,75 +510,213 @@
 
 <div class="hearts-layer" id="heartsLayer"></div>
 
-<!-- ============ HERO ============ -->
-<section id="hero">
-  <div class="eyebrow-soft">happy birthday</div>
-  <h1 class="hero-name">Sabrina</h1>
-  <p class="hero-sub">I made you something small, for a day that deserves something big. Scroll down, love.</p>
-  <div class="scroll-cue">↓ keep going ↓</div>
-</section>
+<div class="spotify-embed" id="spotifyEmbed"></div>
 
-<!-- ============ MEMORY 1: The day we met ============ -->
-<section class="memory" id="met">
-  <div class="memory-label">memory one</div>
-  <h2>The day we met</h2>
-  <p>
-    <!-- ✏️ EDIT ME: replace this paragraph with your own words about the day you met Sabrina -->
-    I still remember it clearly — the way the day started completely ordinary, and then it wasn't anymore.
-    I didn't know yet that I'd just met the person I'd want to tell everything to. Looking back, it's my
-    favorite ordinary day of all time.
-  </p>
-  <div class="photo-slot">
-    <!-- ✏️ Replace src="" with your photo's filename, e.g. src="us-first-day.jpg" -->
-    <img src="" alt="The day we met">
-    <div class="placeholder-text">📷 photo: the day we met</div>
+<button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+  <span class="music-icon" id="musicIcon">🔈</span>
+</button>
+
+<div id="stage">
+
+  <!-- ============ HERO ============ -->
+  <div class="slide active" id="hero" data-anim="pop">
+    <div class="eyebrow-soft">happy birthday</div>
+    <h1 class="hero-name">Sabrina</h1>
+    <p class="hero-sub">I made you something small, for a day that deserves something big.</p>
+    <button class="continue-btn" data-next>Continue →</button>
   </div>
-</section>
 
-<!-- ============ MEMORY 2: A few of our moments (photo row) ============ -->
-<section class="memory" id="moments">
-  <div class="memory-label">a few favorites</div>
-  <h2>Little moments, big feelings</h2>
-  <p>
-    <!-- ✏️ EDIT ME: a short line about your photos together -->
-    Some of my favorite pictures of us — the ones I keep going back to when I miss you, even if you're just in the next room.
-  </p>
-  <div class="photo-row">
-    <div class="photo-slot"><img src="" alt="Moment one"><div class="placeholder-text">📷</div></div>
-    <div class="photo-slot"><img src="" alt="Moment two"><div class="placeholder-text">📷</div></div>
-    <div class="photo-slot"><img src="" alt="Moment three"><div class="placeholder-text">📷</div></div>
+  <!-- ============ MEMORY: The day we met ============ -->
+  <div class="slide" id="met" data-anim="left">
+    <div class="memory">
+      <div class="memory-label">memory one</div>
+      <h2>The day we met</h2>
+      <p>
+        <!-- ✏️ EDIT ME: replace this paragraph with your own words about the day you met Sabrina -->
+        I still remember it clearly — the way the day started completely ordinary, and then it wasn't anymore.
+        I didn't know yet that I'd just met the person I'd want to tell everything to. Looking back, it's my
+        favorite ordinary day of all time.
+      </p>
+      <div class="photo-slot">
+        <img src="photos/met.jpg" alt="The day we met">
+      </div>
+      <button class="continue-btn" data-next>Continue →</button>
+    </div>
   </div>
-</section>
 
-<!-- ============ STATEMENT ============ -->
-<section id="forever">
-  <div class="memory-label">and honestly,</div>
-  <p class="display">I can't wait to spend every single day with you.</p>
-</section>
-
-<!-- ============ RUNAWAY BUTTON GAME ============ -->
-<section id="game">
-  <div class="memory-label">okay, one more thing</div>
-  <h2>Catch this if you can 😏</h2>
-  <p class="game-hint">it's a little shy — chase it a bit</p>
-  <div class="game-zone" id="gameZone">
-    <button id="dodge-btn">happy birthday!</button>
+  <!-- ============ MOMENT 1 (bag doodle) ============ -->
+  <div class="slide" id="moment-1" data-anim="right">
+    <div class="doodle doodle-bag">
+      <svg viewBox="0 0 64 64"><path d="M18 26 L46 26 L42 54 L22 54 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><path d="M24 26 C24 14, 40 14, 40 26" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="32" cy="38" r="2" fill="var(--rose)"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">just us,</div>
+      <div class="photo-slot large"><img src="photos/gallery-01.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
   </div>
-  <div class="catch-counter" id="catchCounter"></div>
-</section>
 
-<!-- ============ FINALE ============ -->
-<section id="finale">
-  <div class="display">Happy birthday, my love.</div>
-  <p>
-    <!-- ✏️ EDIT ME: your final message to Sabrina -->
-    Thank you for being exactly who you are. I hope this year gives you everything you deserve —
-    and I hope I get to be there for all of it, right next to you.
-  </p>
-  <div class="signoff">— always yours</div>
-</section>
+  <!-- ============ STATEMENT 1 ============ -->
+  <div class="slide statement" id="stmt-best" data-anim="pop">
+    <div class="memory-label">above all,</div>
+    <p class="display">You're the best thing that's happened to me.</p>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
 
-<footer>made with love, for Sabrina</footer>
+  <!-- ============ MOMENT 2 (espresso martini doodle) ============ -->
+  <div class="slide" id="moment-2" data-anim="left">
+    <div class="doodle doodle-martini">
+      <svg viewBox="0 0 64 64"><path d="M14 14 L50 14 L32 36 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><line x1="32" y1="36" x2="32" y2="50" stroke="var(--gold)" stroke-width="3"/><line x1="22" y1="50" x2="42" y2="50" stroke="var(--gold)" stroke-width="3"/><circle cx="26" cy="10" r="2" fill="var(--rose)"/><circle cx="32" cy="6" r="2" fill="var(--rose)"/><circle cx="38" cy="10" r="2" fill="var(--rose)"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">another favorite,</div>
+      <div class="photo-slot large"><img src="photos/gallery-02.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ STATEMENT 2 ============ -->
+  <div class="slide statement" id="forever" data-anim="up">
+    <div class="memory-label">and honestly,</div>
+    <p class="display">I can't wait to spend every single day with you.</p>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 3 (tiramisu doodle) ============ -->
+  <div class="slide" id="moment-3" data-anim="right">
+    <div class="doodle doodle-tiramisu">
+      <svg viewBox="0 0 64 64"><path d="M14 46 L32 14 L50 46 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><line x1="20" y1="38" x2="44" y2="38" stroke="var(--gold)" stroke-width="2"/><line x1="24" y1="30" x2="40" y2="30" stroke="var(--gold)" stroke-width="2"/><circle cx="28" cy="22" r="1.5" fill="var(--rose)"/><circle cx="34" cy="24" r="1.5" fill="var(--rose)"/><circle cx="31" cy="18" r="1.5" fill="var(--rose)"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">this one always makes me smile,</div>
+      <div class="photo-slot large"><img src="photos/gallery-03.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ STATEMENT 3 ============ -->
+  <div class="slide statement" id="stmt-older" data-anim="left">
+    <div class="memory-label">here's to us,</div>
+    <p class="display">I can't wait to get older with you.</p>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 4 (no doodle) ============ -->
+  <div class="slide" id="moment-4" data-anim="right">
+    <div class="memory">
+      <div class="memory-label">and this,</div>
+      <div class="photo-slot large"><img src="photos/gallery-04.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 5 (dice doodle) ============ -->
+  <div class="slide" id="moment-5" data-anim="pop">
+    <div class="doodle doodle-dice">
+      <svg viewBox="0 0 64 64"><rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="24" cy="24" r="2.4" fill="var(--rose)"/><circle cx="40" cy="24" r="2.4" fill="var(--rose)"/><circle cx="32" cy="32" r="2.4" fill="var(--rose)"/><circle cx="24" cy="40" r="2.4" fill="var(--rose)"/><circle cx="40" cy="40" r="2.4" fill="var(--rose)"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">one more,</div>
+      <div class="photo-slot large"><img src="photos/gallery-05.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ STATEMENT 4 ============ -->
+  <div class="slide statement" id="stmt-wishes" data-anim="right">
+    <div class="memory-label">on your day,</div>
+    <p class="display">I hope you get all the things you've always wished for.</p>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 6 (croc / clog shoe doodle) ============ -->
+  <div class="slide" id="moment-6" data-anim="left">
+    <div class="doodle doodle-shoe">
+      <svg viewBox="0 0 64 64"><path d="M10 44 C10 30, 20 18, 34 18 C44 18, 50 26, 50 34 L50 44 C50 48, 46 50, 42 50 L14 50 C11 50, 10 47, 10 44 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="30" cy="30" r="2.2" fill="var(--rose)"/><circle cx="38" cy="28" r="2.2" fill="var(--rose)"/><circle cx="34" cy="36" r="2.2" fill="var(--rose)"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">still my favorite,</div>
+      <div class="photo-slot large"><img src="photos/gallery-06.jpg" alt="Sabrina"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 7 (no doodle) ============ -->
+  <div class="slide" id="moment-7" data-anim="up">
+    <div class="memory">
+      <div class="memory-label">and this one too,</div>
+      <div class="photo-slot large"><img src="photos/gallery-07.jpg" alt="Us together"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ STATEMENT 5 ============ -->
+  <div class="slide statement" id="stmt-always" data-anim="pop">
+    <div class="memory-label">no matter what,</div>
+    <p class="display">I'll always be there for you.</p>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 8 (surgeon / stethoscope doodle) ============ -->
+  <div class="slide" id="moment-8" data-anim="right">
+    <div class="doodle doodle-stethoscope">
+      <svg viewBox="0 0 64 64"><path d="M18 10 C18 20, 18 24, 26 24 C34 24, 34 20, 34 10" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/><path d="M26 24 L26 38 C26 46, 34 48, 40 44" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/><circle cx="44" cy="44" r="6" fill="none" stroke="var(--gold)" stroke-width="3"/></svg>
+    </div>
+    <div class="memory">
+      <div class="memory-label">just because,</div>
+      <div class="photo-slot large"><img src="photos/gallery-08.jpg" alt="Sabrina"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 9 (no doodle) ============ -->
+  <div class="slide" id="moment-9" data-anim="left">
+    <div class="memory">
+      <div class="memory-label">and this,</div>
+      <div class="photo-slot large"><img src="photos/gallery-09.jpg" alt="Sabrina"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ RUNAWAY BUTTON GAME ============ -->
+  <div class="slide" id="game" data-anim="up">
+    <div class="game-inner" id="gameInner">
+      <div class="memory-label">okay, one more thing</div>
+      <h2>Catch this if you can 😏</h2>
+      <p class="game-hint" id="gameHint">it's a little shy — chase it a bit</p>
+      <div class="game-zone" id="gameZone">
+        <div class="dodge-wrap" id="dodgeWrap">
+          <button id="dodge-btn">happy birthday!</button>
+        </div>
+      </div>
+      <div class="catch-counter" id="catchCounter"></div>
+    </div>
+  </div>
+
+  <!-- ============ MOMENT 10 (no doodle, last photo before finale) ============ -->
+  <div class="slide" id="moment-10" data-anim="pop">
+    <div class="memory">
+      <div class="memory-label">and last but not least,</div>
+      <div class="photo-slot large"><img src="photos/gallery-10.jpg" alt="Sabrina"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ FINALE ============ -->
+  <div class="slide" id="finale" data-anim="pop">
+    <div class="memory-label">happy birthday, my love</div>
+    <p class="display">I can't wait to spend the rest of my life with you.</p>
+    <p>
+      <!-- ✏️ EDIT ME: your final message to Sabrina -->
+      Thank you for being exactly who you are. I hope this year gives you everything you deserve —
+      and I hope I get to be there for all of it, right next to you.
+    </p>
+    <div class="signoff">— always yours</div>
+  </div>
+
+</div>
+
+<nav class="progress-dots" id="progressDots"></nav>
 
 <script>
   // ---------- Ambient floating hearts ----------
@@ -418,47 +734,202 @@
     heartsLayer.appendChild(h);
   }
 
+  // ---------- Music (real Spotify track) ----------
+  // Spotify's embed can't be auto-injected before any interaction (and
+  // iPhones block audio until a real tap regardless), so we create the
+  // player the moment she taps anything — which in practice is her very
+  // first "Continue" button — and pass autoplay=1 so it starts right away.
+  const SPOTIFY_TRACK_ID = '50x1Ic8CaXkYNvjmxe3WXy'; // "Those Eyes" — New West
+  const spotifyEmbed = document.getElementById('spotifyEmbed');
+  const musicToggle = document.getElementById('musicToggle');
+  const musicIcon = document.getElementById('musicIcon');
+  let musicOn = false;
+
+  function showSpotify() {
+    spotifyEmbed.innerHTML =
+      `<iframe src="https://open.spotify.com/embed/track/${SPOTIFY_TRACK_ID}?utm_source=generator&autoplay=1"
+        width="100%" height="80" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>`;
+    spotifyEmbed.classList.add('show');
+    musicOn = true;
+    musicToggle.classList.add('playing');
+    musicIcon.textContent = '🔊';
+  }
+
+  function hideSpotify() {
+    spotifyEmbed.classList.remove('show');
+    spotifyEmbed.innerHTML = '';
+    musicOn = false;
+    musicToggle.classList.remove('playing');
+    musicIcon.textContent = '🔈';
+  }
+
+  document.addEventListener('pointerdown', (e) => {
+    if (musicToggle.contains(e.target)) return;
+    if (!musicOn) showSpotify();
+  }, { once: true, passive: true });
+
+  musicToggle.addEventListener('click', () => {
+    if (musicOn) hideSpotify(); else showSpotify();
+  });
+
+  // ---------- Presentation-style slide controller ----------
+  const slideIds = [
+    'hero', 'met',
+    'moment-1', 'stmt-best',
+    'moment-2', 'forever',
+    'moment-3', 'stmt-older',
+    'moment-4', 'moment-5',
+    'stmt-wishes', 'moment-6',
+    'moment-7', 'stmt-always',
+    'moment-8', 'moment-9',
+    'game', 'moment-10', 'finale'
+  ];
+  const slides = slideIds.map((id) => document.getElementById(id));
+  const dotsNav = document.getElementById('progressDots');
+  let current = 0;
+  let maxReached = 0;
+
+  slideIds.forEach((id, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'progress-dot';
+    dot.setAttribute('aria-label', 'Go to part ' + (i + 1));
+    dot.addEventListener('click', () => {
+      if (i <= maxReached) goTo(i);
+    });
+    dotsNav.appendChild(dot);
+  });
+  const dots = Array.from(dotsNav.children);
+
+  function updateDots() {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+      dot.classList.toggle('visited', i <= maxReached);
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length || index === current) return;
+    slides[current].classList.remove('active');
+    current = index;
+    maxReached = Math.max(maxReached, current);
+    slides[current].classList.add('active');
+    updateDots();
+  }
+
+  document.querySelectorAll('[data-next]').forEach((btn) => {
+    btn.addEventListener('click', () => goTo(current + 1));
+  });
+
+  updateDots();
+
+  // Keyboard support (desktop): arrow keys / space to move between visited slides
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      const btn = slides[current].querySelector('[data-next]');
+      if (btn) goTo(current + 1);
+    } else if (e.key === 'ArrowLeft') {
+      if (current > 0) goTo(current - 1);
+    }
+  });
+
+  // Swipe support (mobile): swipe left to continue, swipe right to go back —
+  // only on slides that actually have a Continue button (not the game slide).
+  let touchStartX = null;
+  document.getElementById('stage').addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('stage').addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(dx) < 60) return;
+    if (dx < 0) {
+      const btn = slides[current].querySelector('[data-next]');
+      if (btn) goTo(current + 1);
+    } else {
+      if (current > 0) goTo(current - 1);
+    }
+  }, { passive: true });
+
   // ---------- Runaway button mechanic ----------
   const zone = document.getElementById('gameZone');
+  const gameInner = document.getElementById('gameInner');
+  const wrap = document.getElementById('dodgeWrap');
   const btn = document.getElementById('dodge-btn');
   const counterEl = document.getElementById('catchCounter');
-  const finale = document.getElementById('finale');
+  const hintEl = document.getElementById('gameHint');
 
   let dodges = 0;
-  const dodgesBeforeCatchable = 4; // how many times it runs before letting her catch it
+  const dodgesBeforeCatchable = 4;
   let caught = false;
 
+  const particleEmojis = ['💨', '✨', '💫'];
   const hints = [
-    "so close!",
-    "almost had it",
-    "nice try 😌",
+    "ooh, so close!",
+    "nope, too slow 😏",
+    "keep going, almost!",
     "it's warming up to you...",
-    "okay okay, one more try"
   ];
+  const finalHint = "okay okay, one more try 💛";
 
   function moveButton() {
     const zoneRect = zone.getBoundingClientRect();
     const btnRect = btn.getBoundingClientRect();
     const maxX = zoneRect.width - btnRect.width;
     const maxY = zoneRect.height - btnRect.height;
-    const newX = Math.random() * Math.max(maxX, 0);
-    const newY = Math.random() * Math.max(maxY, 0);
-    btn.style.left = newX + btnRect.width / 2 + 'px';
-    btn.style.top = newY + btnRect.height / 2 + 'px';
+    const newX = Math.random() * Math.max(maxX, 0) + btnRect.width / 2;
+    const newY = Math.random() * Math.max(maxY, 0) + btnRect.height / 2;
+    wrap.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+  }
+
+  function spawnParticles() {
+    const zoneRect = zone.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    const cx = btnRect.left + btnRect.width / 2 - zoneRect.left;
+    const cy = btnRect.top + btnRect.height / 2 - zoneRect.top;
+    for (let i = 0; i < 3; i++) {
+      const p = document.createElement('span');
+      p.className = 'dodge-particle';
+      p.textContent = particleEmojis[Math.floor(Math.random() * particleEmojis.length)];
+      p.style.left = (cx + (Math.random() * 40 - 20)) + 'px';
+      p.style.top = (cy + (Math.random() * 20 - 10)) + 'px';
+      zone.appendChild(p);
+      setTimeout(() => p.remove(), 750);
+    }
   }
 
   function dodge() {
     dodges++;
+    spawnParticles();
     moveButton();
+    btn.classList.remove('jumping');
+    void btn.offsetWidth;
+    btn.classList.add('jumping');
+
+    gameInner.classList.remove('shake');
+    void gameInner.offsetWidth;
+    gameInner.classList.add('shake');
+
     if (dodges <= hints.length) {
-      counterEl.textContent = hints[dodges - 1];
+      hintEl.style.opacity = 0;
+      setTimeout(() => {
+        hintEl.textContent = hints[dodges - 1];
+        hintEl.style.opacity = 0.75;
+      }, 120);
     }
     if (dodges >= dodgesBeforeCatchable) {
       btn.textContent = "okay, catch me 💛";
+      btn.classList.add('ready');
+      hintEl.style.opacity = 0;
+      setTimeout(() => {
+        hintEl.textContent = finalHint;
+        hintEl.style.opacity = 0.75;
+      }, 120);
     }
   }
 
-  // Desktop: dodge on hover approach
   zone.addEventListener('mousemove', (e) => {
     if (caught) return;
     const btnRect = btn.getBoundingClientRect();
@@ -466,12 +937,11 @@
       e.clientX - (btnRect.left + btnRect.width / 2),
       e.clientY - (btnRect.top + btnRect.height / 2)
     );
-    if (dist < 90 && dodges < dodgesBeforeCatchable) {
+    if (dist < 95 && dodges < dodgesBeforeCatchable) {
       dodge();
     }
   });
 
-  // Also dodge on click attempts until it's ready to be caught
   btn.addEventListener('click', (e) => {
     if (dodges < dodgesBeforeCatchable) {
       e.preventDefault();
@@ -481,7 +951,6 @@
     catchButton();
   });
 
-  // Touch: dodge on touchstart near the button until catchable
   btn.addEventListener('touchstart', (e) => {
     if (dodges < dodgesBeforeCatchable) {
       e.preventDefault();
@@ -491,23 +960,22 @@
 
   function catchButton() {
     caught = true;
+    btn.classList.remove('ready', 'jumping');
     counterEl.textContent = "got it 🎉";
     launchConfetti();
-    setTimeout(() => {
-      finale.classList.add('show');
-      finale.scrollIntoView({ behavior: 'smooth' });
-    }, 500);
+    setTimeout(() => goTo(slideIds.indexOf('moment-10')), 500);
   }
 
-  // Give it an initial position so it's not dead-center on load
-  window.addEventListener('load', () => {
-    setTimeout(moveButton, 100);
+  document.getElementById('game').addEventListener('transitionend', function initGamePosition(e) {
+    if (e.propertyName === 'transform' && document.getElementById('game').classList.contains('active')) {
+      moveButton();
+    }
   });
 
   // ---------- Confetti burst ----------
   function launchConfetti() {
     const colors = ['#f4c77b', '#e8a0a9', '#f7dde0', '#ffffff'];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 70; i++) {
       const piece = document.createElement('div');
       piece.className = 'confetti-piece';
       piece.style.left = Math.random() * 100 + 'vw';
