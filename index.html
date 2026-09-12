@@ -167,23 +167,6 @@
   .music-toggle:active { transform: scale(0.9); }
   .music-toggle.playing { border-color: var(--gold); }
 
-  .spotify-embed {
-    position: fixed;
-    left: 50%;
-    bottom: max(3.6rem, calc(env(safe-area-inset-bottom) + 3.6rem));
-    transform: translateX(-50%);
-    width: min(92vw, 360px);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.45);
-    z-index: 15;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s var(--smooth);
-  }
-  .spotify-embed.show { opacity: 1; pointer-events: auto; }
-  .spotify-embed iframe { display: block; width: 100%; height: 80px; border: 0; }
-
   /* ---------- Continue button ---------- */
   .continue-btn {
     margin-top: 2.5rem;
@@ -492,9 +475,23 @@
     to { transform: translate3d(0, 110vh, 0) rotate(540deg); opacity: 0.9; }
   }
 
+  /* Small themed burst that plays on every slide transition */
+  .transition-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 25;
+    will-change: transform, opacity;
+    animation: transition-fall ease-out forwards;
+  }
+  @keyframes transition-fall {
+    0%   { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg) scale(0.6); }
+    18%  { opacity: 1; transform: translate3d(calc(var(--tdx, 0px) * 0.3), 4vh, 0) rotate(40deg) scale(1); }
+    100% { opacity: 0; transform: translate3d(var(--tdx, 0px), 58vh, 0) rotate(220deg) scale(0.9); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .heart, .hero-name, .eyebrow-soft, .hero-sub, #hero .continue-btn,
-    #dodge-btn, #dodge-btn.jumping, #dodge-btn.ready, .slide, .doodle { animation: none !important; opacity: 1 !important; }
+    #dodge-btn, #dodge-btn.jumping, #dodge-btn.ready, .slide, .doodle, .transition-particle { animation: none !important; opacity: 1 !important; }
     .slide { transition: opacity 0.3s ease !important; transform: none !important; }
     .slide.active { transform: none !important; }
   }
@@ -510,7 +507,8 @@
 
 <div class="hearts-layer" id="heartsLayer"></div>
 
-<div class="spotify-embed" id="spotifyEmbed"></div>
+<!-- Add your own song file to the repo with this exact filename -->
+<audio id="bgMusic" src="Those_Eyes.mp3" loop preload="auto"></audio>
 
 <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
   <span class="music-icon" id="musicIcon">🔈</span>
@@ -538,7 +536,7 @@
         favorite ordinary day of all time.
       </p>
       <div class="photo-slot">
-        <img src="photos/met.jpg" alt="The day we met">
+        <img src="photos/gallery-01.jpg" alt="The day we met">
       </div>
       <button class="continue-btn" data-next>Continue →</button>
     </div>
@@ -551,7 +549,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">just us,</div>
-      <div class="photo-slot large"><img src="photos/gallery-01.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-02.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -570,7 +568,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">another favorite,</div>
-      <div class="photo-slot large"><img src="photos/gallery-02.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-03.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -589,7 +587,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">this one always makes me smile,</div>
-      <div class="photo-slot large"><img src="photos/gallery-03.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-04.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -605,7 +603,7 @@
   <div class="slide" id="moment-4" data-anim="right">
     <div class="memory">
       <div class="memory-label">and this,</div>
-      <div class="photo-slot large"><img src="photos/gallery-04.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-05.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -617,7 +615,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">one more,</div>
-      <div class="photo-slot large"><img src="photos/gallery-05.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-06.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -636,7 +634,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">still my favorite,</div>
-      <div class="photo-slot large"><img src="photos/gallery-06.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-07.jpg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -645,7 +643,7 @@
   <div class="slide" id="moment-7" data-anim="up">
     <div class="memory">
       <div class="memory-label">and this one too,</div>
-      <div class="photo-slot large"><img src="photos/gallery-07.jpg" alt="Us together"></div>
+      <div class="photo-slot large"><img src="photos/gallery-08.jpg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -664,7 +662,7 @@
     </div>
     <div class="memory">
       <div class="memory-label">just because,</div>
-      <div class="photo-slot large"><img src="photos/gallery-08.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-09.jpg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -673,7 +671,7 @@
   <div class="slide" id="moment-9" data-anim="left">
     <div class="memory">
       <div class="memory-label">and this,</div>
-      <div class="photo-slot large"><img src="photos/gallery-09.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-10.jpg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -693,11 +691,20 @@
     </div>
   </div>
 
-  <!-- ============ MOMENT 10 (no doodle, last photo before finale) ============ -->
+  <!-- ============ MOMENT 10 (no doodle) ============ -->
   <div class="slide" id="moment-10" data-anim="pop">
     <div class="memory">
       <div class="memory-label">and last but not least,</div>
-      <div class="photo-slot large"><img src="photos/gallery-10.jpg" alt="Sabrina"></div>
+      <div class="photo-slot large"><img src="photos/gallery-11.jpg" alt="Sabrina"></div>
+    </div>
+    <button class="continue-btn" data-next>Continue →</button>
+  </div>
+
+  <!-- ============ MOMENT 11 (no doodle, last photo before finale) ============ -->
+  <div class="slide" id="moment-11" data-anim="left">
+    <div class="memory">
+      <div class="memory-label">and one more,</div>
+      <div class="photo-slot large"><img src="photos/gallery-12.jpg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
@@ -734,44 +741,68 @@
     heartsLayer.appendChild(h);
   }
 
-  // ---------- Music (real Spotify track) ----------
-  // Spotify's embed can't be auto-injected before any interaction (and
-  // iPhones block audio until a real tap regardless), so we create the
-  // player the moment she taps anything — which in practice is her very
-  // first "Continue" button — and pass autoplay=1 so it starts right away.
-  const SPOTIFY_TRACK_ID = '50x1Ic8CaXkYNvjmxe3WXy'; // "Those Eyes" — New West
-  const spotifyEmbed = document.getElementById('spotifyEmbed');
+  // ---------- Background music ----------
+  // iPhones (and most browsers) block audio from playing until the user has
+  // actually tapped something, so we start it on her very first touch/click
+  // anywhere on the page, then let the toggle button control it after that.
+  const bgMusic = document.getElementById('bgMusic');
   const musicToggle = document.getElementById('musicToggle');
   const musicIcon = document.getElementById('musicIcon');
-  let musicOn = false;
+  let musicStarted = false;
+  const TARGET_VOLUME = 0.6;
+  let fadeTimer = null;
 
-  function showSpotify() {
-    spotifyEmbed.innerHTML =
-      `<iframe src="https://open.spotify.com/embed/track/${SPOTIFY_TRACK_ID}?utm_source=generator&autoplay=1"
-        width="100%" height="80" frameborder="0"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"></iframe>`;
-    spotifyEmbed.classList.add('show');
-    musicOn = true;
-    musicToggle.classList.add('playing');
-    musicIcon.textContent = '🔊';
+  function fadeAudio(target, duration = 1800, onDone) {
+    clearInterval(fadeTimer);
+    const steps = 30;
+    const stepTime = duration / steps;
+    const startVol = bgMusic.volume;
+    const diff = target - startVol;
+    let step = 0;
+    fadeTimer = setInterval(() => {
+      step++;
+      bgMusic.volume = Math.min(1, Math.max(0, startVol + diff * (step / steps)));
+      if (step >= steps) {
+        clearInterval(fadeTimer);
+        bgMusic.volume = target;
+        if (onDone) onDone();
+      }
+    }, stepTime);
   }
 
-  function hideSpotify() {
-    spotifyEmbed.classList.remove('show');
-    spotifyEmbed.innerHTML = '';
-    musicOn = false;
-    musicToggle.classList.remove('playing');
-    musicIcon.textContent = '🔈';
+  function startMusic() {
+    if (musicStarted) return;
+    musicStarted = true;
+    bgMusic.volume = 0;
+    bgMusic.play().then(() => {
+      musicToggle.classList.add('playing');
+      musicIcon.textContent = '🔊';
+      fadeAudio(TARGET_VOLUME, 2200);
+    }).catch(() => {
+      // File not uploaded yet, or the browser still blocked it — that's fine,
+      // she can just tap the music button herself once it's in place.
+      musicStarted = false;
+    });
   }
 
   document.addEventListener('pointerdown', (e) => {
-    if (musicToggle.contains(e.target)) return;
-    if (!musicOn) showSpotify();
+    if (musicToggle.contains(e.target)) return; // let the toggle handle its own first tap
+    startMusic();
   }, { once: true, passive: true });
 
   musicToggle.addEventListener('click', () => {
-    if (musicOn) hideSpotify(); else showSpotify();
+    if (bgMusic.paused) {
+      bgMusic.volume = 0;
+      bgMusic.play().then(() => {
+        musicToggle.classList.add('playing');
+        musicIcon.textContent = '🔊';
+        fadeAudio(TARGET_VOLUME, 1200);
+      }).catch(() => {});
+    } else {
+      musicToggle.classList.remove('playing');
+      musicIcon.textContent = '🔈';
+      fadeAudio(0, 600, () => bgMusic.pause());
+    }
   });
 
   // ---------- Presentation-style slide controller ----------
@@ -784,7 +815,7 @@
     'stmt-wishes', 'moment-6',
     'moment-7', 'stmt-always',
     'moment-8', 'moment-9',
-    'game', 'moment-10', 'finale'
+    'game', 'moment-10', 'moment-11', 'finale'
   ];
   const slides = slideIds.map((id) => document.getElementById(id));
   const dotsNav = document.getElementById('progressDots');
@@ -816,6 +847,163 @@
     maxReached = Math.max(maxReached, current);
     slides[current].classList.add('active');
     updateDots();
+    launchTransitionBurst();
+  }
+
+  // A themed sprinkle that plays every time she moves between slides —
+  // mixing board-game dice, a stethoscope, coffee, sunflowers, and sparkle.
+  // Each transition uses a genuinely different motion style (rain, rise,
+  // firework burst, side sweep, spiral, floaty drift, popper) so it never
+  // feels like the same animation twice in a row.
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const themeEmojis = ['🎲', '🩺', '☕', '🌻', '✨', '🎉'];
+  let burstStep = 0;
+
+  const burstModes = [
+    // 0: rain — falls from top down past the middle of the screen
+    () => {
+      const startX = Math.random() * 92 + 4;
+      const startY = -6;
+      const dx = (Math.random() * 30 - 15);
+      const dy = 62 + Math.random() * 10;
+      const rot = 160 + Math.random() * 120;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.6)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(${dx * 0.3}vw, ${dy * 0.25}vh, 0) rotate(${rot * 0.3}deg) scale(1)`, offset: 0.2, opacity: 1 },
+          { transform: `translate3d(${dx}vw, ${dy}vh, 0) rotate(${rot}deg) scale(0.9)`, offset: 1, opacity: 0 }
+        ],
+        left: startX + 'vw', top: startY + 'vh', duration: 1200 + Math.random() * 500
+      };
+    },
+    // 1: rise — floats up from the bottom like little bubbles
+    () => {
+      const startX = Math.random() * 92 + 4;
+      const dx = (Math.random() * 20 - 10);
+      const dy = -(50 + Math.random() * 20);
+      const rot = (Math.random() * 60 - 30);
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.5)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(${dx * 0.4}vw, ${dy * 0.3}vh, 0) rotate(${rot * 0.5}deg) scale(1)`, offset: 0.25, opacity: 1 },
+          { transform: `translate3d(${dx}vw, ${dy}vh, 0) rotate(${rot}deg) scale(0.8)`, offset: 1, opacity: 0 }
+        ],
+        left: startX + 'vw', top: '96vh', duration: 1300 + Math.random() * 500
+      };
+    },
+    // 2: firework — bursts outward from the center in all directions
+    () => {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 20 + Math.random() * 16;
+      const dx = Math.cos(angle) * radius;
+      const dy = Math.sin(angle) * radius * 0.6;
+      const rot = Math.random() * 360;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.3)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(${dx * 0.6}vw, ${dy * 0.6}vh, 0) rotate(${rot * 0.6}deg) scale(1.1)`, offset: 0.4, opacity: 1 },
+          { transform: `translate3d(${dx}vw, ${dy}vh, 0) rotate(${rot}deg) scale(0.7)`, offset: 1, opacity: 0 }
+        ],
+        left: (46 + Math.random() * 8) + 'vw', top: (40 + Math.random() * 12) + 'vh', duration: 750 + Math.random() * 350
+      };
+    },
+    // 3: sweep right — drifts across the screen left to right
+    () => {
+      const startY = 8 + Math.random() * 45;
+      const wobble = Math.random() * 8 - 4;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.8)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(55vw, ${wobble}vh, 0) rotate(180deg) scale(1)`, offset: 0.5, opacity: 1 },
+          { transform: `translate3d(110vw, 0vh, 0) rotate(360deg) scale(0.9)`, offset: 1, opacity: 0 }
+        ],
+        left: '-6vw', top: startY + 'vh', duration: 1100 + Math.random() * 400
+      };
+    },
+    // 4: sweep left — mirrored version, right to left
+    () => {
+      const startY = 8 + Math.random() * 45;
+      const wobble = Math.random() * 8 - 4;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.8)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(-55vw, ${wobble}vh, 0) rotate(-180deg) scale(1)`, offset: 0.5, opacity: 1 },
+          { transform: `translate3d(-110vw, 0vh, 0) rotate(-360deg) scale(0.9)`, offset: 1, opacity: 0 }
+        ],
+        left: '106vw', top: startY + 'vh', duration: 1100 + Math.random() * 400
+      };
+    },
+    // 5: spiral — loops around while drifting upward off the top
+    () => {
+      const cx = Math.random() * 60 - 30;
+      const rBase = 6 + Math.random() * 4;
+      const pts = [];
+      const steps = 5;
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const a = t * Math.PI * 2.2;
+        const r = rBase * (1 - t * 0.3);
+        pts.push({
+          transform: `translate3d(${cx * t + Math.cos(a) * r}vw, ${-t * 70}vh, 0) rotate(${a * 90}deg) scale(${1 - t * 0.3})`,
+          offset: t,
+          opacity: t < 0.15 ? t / 0.15 : (t > 0.85 ? (1 - t) / 0.15 : 1)
+        });
+      }
+      return { keyframes: pts, left: (30 + Math.random() * 40) + 'vw', top: '80vh', duration: 1500 + Math.random() * 400 };
+    },
+    // 6: floaty — big, slow, gentle drift (feels weightless)
+    () => {
+      const startX = Math.random() * 90 + 5;
+      const dx = Math.random() * 14 - 7;
+      const dy = 22 + Math.random() * 14;
+      const rot = Math.random() * 30 - 15;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.9)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(${dx * 0.5}vw, ${dy * 0.5}vh, 0) rotate(${rot * 0.5}deg) scale(1.4)`, offset: 0.35, opacity: 1 },
+          { transform: `translate3d(${dx}vw, ${dy}vh, 0) rotate(${rot}deg) scale(1.2)`, offset: 1, opacity: 0 }
+        ],
+        left: startX + 'vw', top: (Math.random() * 8) + 'vh', duration: 1700 + Math.random() * 500
+      };
+    },
+    // 7: popper — shoots up fast then arcs back down, like party-popper confetti
+    () => {
+      const dxUp = Math.random() * 20 - 10;
+      const dxDown = dxUp + (Math.random() * 14 - 7);
+      const rot = Math.random() * 300 + 120;
+      return {
+        keyframes: [
+          { transform: `translate3d(0,0,0) rotate(0deg) scale(0.7)`, offset: 0, opacity: 0 },
+          { transform: `translate3d(${dxUp}vw, -55vh, 0) rotate(${rot * 0.4}deg) scale(1)`, offset: 0.35, opacity: 1 },
+          { transform: `translate3d(${dxDown}vw, -20vh, 0) rotate(${rot}deg) scale(0.85)`, offset: 1, opacity: 0 }
+        ],
+        left: (40 + Math.random() * 20) + 'vw', top: '92vh', duration: 950 + Math.random() * 350
+      };
+    }
+  ];
+
+  function launchTransitionBurst() {
+    if (prefersReducedMotion) return;
+    const mode = burstModes[burstStep % burstModes.length];
+    burstStep++;
+    const count = 9;
+    for (let i = 0; i < count; i++) {
+      const spec = mode();
+      const p = document.createElement('span');
+      p.className = 'transition-particle';
+      p.textContent = themeEmojis[Math.floor(Math.random() * themeEmojis.length)];
+      p.style.left = spec.left;
+      p.style.top = spec.top;
+      p.style.fontSize = (1 + Math.random() * 0.7) + 'rem';
+      document.body.appendChild(p);
+      const anim = p.animate(spec.keyframes, {
+        duration: spec.duration,
+        easing: 'ease-out',
+        fill: 'forwards'
+      });
+      anim.onfinish = () => p.remove();
+      setTimeout(() => p.remove(), spec.duration + 300);
+    }
   }
 
   document.querySelectorAll('[data-next]').forEach((btn) => {
