@@ -115,8 +115,8 @@
     100% { transform: translate3d(var(--drift, 20px), -110vh, 0) rotate(20deg); opacity: 0; }
   }
 
-  /* ---------- Progress dots ---------- */
-  .progress-dots {
+  /* ---------- Progress dots (hidden) ---------- */
+  .progress-dots { display: none !important; } .progress-dots-DISABLED {
     position: fixed;
     left: 50%;
     bottom: max(1.4rem, env(safe-area-inset-bottom));
@@ -557,9 +557,9 @@
 
   <!-- ============ HERO ============ -->
   <div class="slide active" id="hero" data-anim="pop">
-    <div class="eyebrow-soft">happy birthday</div>
-    <h1 class="hero-name">Sabrina</h1>
-    <p class="hero-sub">I made you something small, for a day that deserves something big.</p>
+    <div class="eyebrow-soft"><!-- ?? EDIT: Small italic text above the name (e.g. "happy birthday", "i love you", etc.) -->happy birthday</div>
+    <h1 class="hero-name"><!-- ?? EDIT: Her name in big gold letters -->Sabrina</h1>
+    <p class="hero-sub"><!-- ?? EDIT: The subtitle shown on the first screen -->I made you something small, for a day that deserves something big.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
@@ -567,6 +567,7 @@
   <div class="slide" id="met" data-anim="left">
     <div class="memory">
       <div class="memory-label">memory one</div>
+      <!-- ?? EDIT: Title of this memory slide -->
       <h2>The day we met</h2>
       <p>
         <!-- ✏️ EDIT ME: replace this paragraph with your own words about the day you met Sabrina -->
@@ -587,7 +588,7 @@
       <svg viewBox="0 0 64 64"><path d="M18 26 L46 26 L42 54 L22 54 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><path d="M24 26 C24 14, 40 14, 40 26" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="32" cy="38" r="2" fill="var(--rose)"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">just us,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->just us,</div>
       <div class="photo-slot large"><img src="photos/gallery-02.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -596,7 +597,8 @@
   <!-- ============ STATEMENT 1 ============ -->
   <div class="slide statement" id="stmt-best" data-anim="pop">
     <div class="memory-label">above all,</div>
-    <p class="display">You're the best thing that's happened to me.</p>
+    <p class="display"><!-- ?? EDIT: Big statement text on this slide -->
+    You're the best thing that's happened to me.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
@@ -606,7 +608,7 @@
       <svg viewBox="0 0 64 64"><path d="M14 14 L50 14 L32 36 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><line x1="32" y1="36" x2="32" y2="50" stroke="var(--gold)" stroke-width="3"/><line x1="22" y1="50" x2="42" y2="50" stroke="var(--gold)" stroke-width="3"/><circle cx="26" cy="10" r="2" fill="var(--rose)"/><circle cx="32" cy="6" r="2" fill="var(--rose)"/><circle cx="38" cy="10" r="2" fill="var(--rose)"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">another favorite,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->another favorite,</div>
       <div class="photo-slot large"><img src="photos/gallery-03.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -615,7 +617,8 @@
   <!-- ============ STATEMENT 2 ============ -->
   <div class="slide statement" id="forever" data-anim="up">
     <div class="memory-label">and honestly,</div>
-    <p class="display">I can't wait to spend every single day with you.</p>
+    <p class="display"><!-- ?? EDIT: Big statement text on this slide -->
+    I can't wait to spend every single day with you.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
@@ -625,7 +628,7 @@
       <svg viewBox="0 0 64 64"><path d="M14 46 L32 14 L50 46 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><line x1="20" y1="38" x2="44" y2="38" stroke="var(--gold)" stroke-width="2"/><line x1="24" y1="30" x2="40" y2="30" stroke="var(--gold)" stroke-width="2"/><circle cx="28" cy="22" r="1.5" fill="var(--rose)"/><circle cx="34" cy="24" r="1.5" fill="var(--rose)"/><circle cx="31" cy="18" r="1.5" fill="var(--rose)"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">this one always makes me smile,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->this one always makes me smile,</div>
       <div class="photo-slot large"><img src="photos/gallery-04.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -634,14 +637,15 @@
   <!-- ============ STATEMENT 3 ============ -->
   <div class="slide statement" id="stmt-older" data-anim="left">
     <div class="memory-label">here's to us,</div>
-    <p class="display">I can't wait to get older with you.</p>
+    <p class="display"><!-- ?? EDIT: Big statement text on this slide -->
+    I can't wait to get older with you.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
   <!-- ============ MOMENT 4 (no doodle) ============ -->
   <div class="slide" id="moment-4" data-anim="right">
     <div class="memory">
-      <div class="memory-label">and this,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->and this,</div>
       <div class="photo-slot large"><img src="photos/gallery-05.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -653,7 +657,7 @@
       <svg viewBox="0 0 64 64"><rect x="14" y="14" width="36" height="36" rx="8" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="24" cy="24" r="2.4" fill="var(--rose)"/><circle cx="40" cy="24" r="2.4" fill="var(--rose)"/><circle cx="32" cy="32" r="2.4" fill="var(--rose)"/><circle cx="24" cy="40" r="2.4" fill="var(--rose)"/><circle cx="40" cy="40" r="2.4" fill="var(--rose)"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">one more,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->one more,</div>
       <div class="photo-slot large"><img src="photos/gallery-06.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -662,7 +666,8 @@
   <!-- ============ STATEMENT 4 ============ -->
   <div class="slide statement" id="stmt-wishes" data-anim="right">
     <div class="memory-label">on your day,</div>
-    <p class="display">I hope you get all the things you've always wished for.</p>
+    <p class="display"><!-- ?? EDIT: Big statement text on this slide -->
+    I hope you get all the things you've always wished for.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
@@ -672,7 +677,7 @@
       <svg viewBox="0 0 64 64"><path d="M10 44 C10 30, 20 18, 34 18 C44 18, 50 26, 50 34 L50 44 C50 48, 46 50, 42 50 L14 50 C11 50, 10 47, 10 44 Z" fill="none" stroke="var(--gold)" stroke-width="3"/><circle cx="30" cy="30" r="2.2" fill="var(--rose)"/><circle cx="38" cy="28" r="2.2" fill="var(--rose)"/><circle cx="34" cy="36" r="2.2" fill="var(--rose)"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">still my favorite,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->still my favorite,</div>
       <div class="photo-slot large"><img src="photos/gallery-07.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -681,7 +686,7 @@
   <!-- ============ MOMENT 7 (no doodle) ============ -->
   <div class="slide" id="moment-7" data-anim="up">
     <div class="memory">
-      <div class="memory-label">and this one too,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->and this one too,</div>
       <div class="photo-slot large"><img src="photos/gallery-08.jpeg" alt="Us together"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -690,7 +695,8 @@
   <!-- ============ STATEMENT 5 ============ -->
   <div class="slide statement" id="stmt-always" data-anim="pop">
     <div class="memory-label">no matter what,</div>
-    <p class="display">I'll always be there for you.</p>
+    <p class="display"><!-- ?? EDIT: Big statement text on this slide -->
+    I'll always be there for you.</p>
     <button class="continue-btn" data-next>Continue →</button>
   </div>
 
@@ -700,7 +706,7 @@
       <svg viewBox="0 0 64 64"><path d="M18 10 C18 20, 18 24, 26 24 C34 24, 34 20, 34 10" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/><path d="M26 24 L26 38 C26 46, 34 48, 40 44" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/><circle cx="44" cy="44" r="6" fill="none" stroke="var(--gold)" stroke-width="3"/></svg>
     </div>
     <div class="memory">
-      <div class="memory-label">just because,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->just because,</div>
       <div class="photo-slot large"><img src="photos/gallery-09.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -709,7 +715,7 @@
   <!-- ============ MOMENT 9 (no doodle) ============ -->
   <div class="slide" id="moment-9" data-anim="left">
     <div class="memory">
-      <div class="memory-label">and this,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->and this,</div>
       <div class="photo-slot large"><img src="photos/gallery-10.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -733,7 +739,7 @@
   <!-- ============ MOMENT 10 (no doodle) ============ -->
   <div class="slide" id="moment-10" data-anim="pop">
     <div class="memory">
-      <div class="memory-label">and last but not least,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->and last but not least,</div>
       <div class="photo-slot large"><img src="photos/gallery-11.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -742,7 +748,7 @@
   <!-- ============ MOMENT 11 (no doodle, last photo before finale) ============ -->
   <div class="slide" id="moment-11" data-anim="left">
     <div class="memory">
-      <div class="memory-label">and one more,</div>
+      <div class="memory-label"><!-- ?? EDIT: Small italic label above photo -->and one more,</div>
       <div class="photo-slot large"><img src="photos/gallery-12.jpeg" alt="Sabrina"></div>
     </div>
     <button class="continue-btn" data-next>Continue →</button>
@@ -825,7 +831,7 @@
         </div>
       </div>
     </div>
-    <div class="memory-label" style="position: relative; z-index: 10;">a little garden for you</div>
+    <div class="memory-label" style="position: relative; z-index: 10;"><!-- ?? EDIT: Caption on the flower animation slide -->a little garden for you</div>
     <button class="continue-btn" data-next style="position: relative; z-index: 10;">Continue ?</button>
   </div>
 
@@ -833,9 +839,10 @@
   <div class="slide" id="letter" data-anim="pop" style="overflow-y: auto;">
     <div class="letter-card">
       <div class="wax-stamp" aria-hidden="true">&#10084;</div>
-      <h1 class="letter-heading" style="color: black;">My Letter to You</h1>
-      <p class="letter-salutation" style="color: #666;">My Dearest Sabrina,</p>
+      <h1 class="letter-heading" style="color: black;"><!-- ?? EDIT: Letter title -->My Letter to You</h1>
+      <p class="letter-salutation" style="color: #666;"><!-- ?? EDIT: Letter greeting -->My Dearest Sabrina,</p>
       <div class="letter-body" id="letterBody" style="color: #333;">
+        <!-- ?? EDIT: Your personal letter paragraphs go here -->
         <p>Happy Birthday! Thank you for being the most amazing person in my life. I wanted to make this little surprise for you because you deserve all the love in the world.</p>
         <p>I hope your day is as beautiful as your smile. I love you!</p>
       </div>
@@ -850,7 +857,7 @@
   <!-- ============ FINALE ============ -->
   <div class="slide" id="finale" data-anim="pop">
     <div class="memory-label">happy birthday, my love</div>
-    <p class="display">I can't wait to spend the rest of my life with you.</p>
+    <p class="display"><!-- ?? EDIT: Final bold message -->I can't wait to spend the rest of my life with you.</p>
     <p>
       <!-- ✏️ EDIT ME: your final message to Sabrina -->
       Thank you for being exactly who you are. I hope this year gives you everything you deserve —
@@ -1317,6 +1324,11 @@
 
 </body>
 </html>
+
+
+
+
+
 
 
 
